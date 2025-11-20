@@ -1,0 +1,30 @@
+from fpdf import FPDF
+def generate_report_pdf(pdf_path, data: dict, gender=""):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=16)
+    pdf.cell(200, 12, txt="AI Beauty & Lifestyle Report 🇨🇦", ln=True, align="C")
+    pdf.set_font("Arial", size=12)
+    pdf.ln(8)
+    pdf.cell(200, 10, txt=f"เพศ/อัตลักษณ์: {gender}", ln=True)
+    pdf.cell(200, 10, txt=f"ไลฟ์สไตล์: {data.get('lifestyle','')}", ln=True)
+    pdf.cell(200, 10, txt=f"MBTI: {data.get('mbti','')}", ln=True)
+    pdf.cell(200, 10, txt=f"งบประมาณ: {data.get('budget','')}", ln=True)
+    pdf.ln(8)
+    pdf.cell(200, 10, txt=f"Animal Type: {data.get('animal_type','')}", ln=True)
+    pdf.cell(200, 10, txt=f"Skin Type: {data.get('skin_type','')}", ln=True)
+    pdf.cell(200, 10, txt=f"Hair Type: {data.get('hair_type','')}", ln=True)
+    pdf.cell(200, 10, txt=f"Personal Color: {data.get('personal_color','')}", ln=True)
+    pdf.cell(200, 10, txt=f"Body Type: {data.get('body_type','')}", ln=True)
+    pdf.ln(8)
+    for cat in data.get("chosen_categories",[]):
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt=f"{cat.title()} Recommendations:", ln=True)
+        for rec in data.get("recommendations",{}).get(cat,[]):
+            txt = rec.get("name",rec.get("style","")) + " ("+rec.get("store","")+") "+str(rec.get("price",""))
+            pdf.cell(200,8,txt=txt,ln=True)
+    pdf.ln(10)
+    if data.get("premium_offer"):
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt="สิทธิ์ทดลองฟีเจอร์ Premium: AI Try-On, Consult และ Community!", ln=True)
+    pdf.output(pdf_path)
